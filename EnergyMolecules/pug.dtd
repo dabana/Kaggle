@@ -1,0 +1,2356 @@
+<!-- ============================================
+     ::DATATOOL:: Generated from "pc_tools.asn"
+     ::DATATOOL:: by application DATATOOL version 2.12.0
+     ::DATATOOL:: on 01/22/2015 16:35:20
+     ============================================ -->
+
+<!-- ============================================ -->
+<!-- This section is mapped from module "NCBI-PCTools"
+================================================= -->
+
+<!--
+ $Id: pc_tools.dtd 457438 2015-01-22 21:36:30Z thiessen $
+ ===========================================================================
+
+                            PUBLIC DOMAIN NOTICE
+               National Center for Biotechnology Information
+
+  This software/database is a "United States Government Work" under the
+  terms of the United States Copyright Act.  It was written as part of
+  the author's official duties as a United States Government employee and
+  thus cannot be copyrighted.  This software/database is freely available
+  to the public for use. The National Library of Medicine and the U.S.
+  Government have not placed any restriction on its use or reproduction.
+
+  Although all reasonable efforts have been taken to ensure the accuracy
+  and reliability of the software and data, the NLM and the U.S.
+  Government do not and cannot warrant the performance or results that
+  may be obtained by using this software or data. The NLM and the U.S.
+  Government disclaim all warranties, express or implied, including
+  warranties of performance, merchantability or fitness for any particular
+  purpose.
+
+  Please cite the author in any work or product based on this material.
+
+ ===========================================================================
+
+  Definitions for communication data for various PubChem tools
+
+  Note that pc_tools.dtd is generated automatically from pc_tools.asn,
+  so if you make changes to pc_tools.asn, please regenerate the DTD
+  (and check it in, in parallel with the .asn to maintain version
+  correspondence), using the command:
+
+    datatool -m pc_tools.asn -fx pc_tools.dtd
+
+  and the XML Schema version by:
+
+    datatool -m pc_tools.asn -fxs pc_tools.xsd -xmlns "http://pubchem.ncbi.nlm.nih.gov/pug/"
+
+  Please keep these data structures fairly simple, as there are many
+  subtleties of ASN.1 that are not handled by an XML DTD. In particular,
+  default values are not handled well in XML.
+
+  by NCBI Structure Group
+
+  National Center for Biotechnology Information
+  National Institutes of Health
+  Bethesda, MD 20894 USA
+
+ ===========================================================================
+-->
+
+<!-- {Input, Output} Top level object -->
+<!ELEMENT PCT-Data (
+        PCT-Data_input | 
+        PCT-Data_output)>
+
+<!-- incoming object (users only ever send input) -->
+<!ELEMENT PCT-Data_input (PCT-InputData)>
+
+<!-- outgoing object (users only ever receive output) -->
+<!ELEMENT PCT-Data_output (PCT-OutputData)>
+
+<!-- {Input} Primary input object -->
+<!ELEMENT PCT-InputData (
+        PCT-InputData_request | 
+        PCT-InputData_query | 
+        PCT-InputData_download | 
+        PCT-InputData_view | 
+        PCT-InputData_standardize)>
+
+<!-- request management -->
+<!ELEMENT PCT-InputData_request (PCT-Request)>
+
+<!-- perform query -->
+<!ELEMENT PCT-InputData_query (PCT-Query)>
+
+<!-- download data -->
+<!ELEMENT PCT-InputData_download (PCT-Download)>
+
+<!-- data view -->
+<!ELEMENT PCT-InputData_view (PCT-View)>
+
+<!-- chemical structure standardization -->
+<!ELEMENT PCT-InputData_standardize (PCT-Standardize)>
+
+<!-- {Output} Primary output object -->
+<!ELEMENT PCT-OutputData (
+        PCT-OutputData_status, 
+        PCT-OutputData_output?)>
+
+<!-- status of the request -->
+<!ELEMENT PCT-OutputData_status (PCT-Status-Message)>
+<!-- result or information regarding request -->
+<!ELEMENT PCT-OutputData_output (
+        PCT-OutputData_output_waiting | 
+        PCT-OutputData_output_download-url | 
+        PCT-OutputData_output_ids | 
+        PCT-OutputData_output_entrez | 
+        PCT-OutputData_output_structure | 
+        PCT-OutputData_output_assay-descr | 
+        PCT-OutputData_output_data-blob)>
+
+<!--
+ request handling
+ request id for new task
+-->
+<!ELEMENT PCT-OutputData_output_waiting (PCT-Waiting)>
+
+<!--
+ result objects
+ output is located at provided URL
+-->
+<!ELEMENT PCT-OutputData_output_download-url (PCT-Download-URL)>
+
+<!-- output is a list of ids -->
+<!ELEMENT PCT-OutputData_output_ids (PCT-ID-List)>
+
+<!-- output is an Entrez history -->
+<!ELEMENT PCT-OutputData_output_entrez (PCT-Entrez)>
+
+<!-- output is a chemical structure -->
+<!ELEMENT PCT-OutputData_output_structure (PCT-Structure)>
+
+<!-- output is an assay description -->
+<!ELEMENT PCT-OutputData_output_assay-descr (PCT-Assay-Descr)>
+
+<!-- output is a blob of data -->
+<!ELEMENT PCT-OutputData_output_data-blob (PCT-DataBlob)>
+
+<!-- {Input} Manage outstanding requests -->
+<!ELEMENT PCT-Request (
+        PCT-Request_reqid, 
+        PCT-Request_type)>
+
+<!-- request id to operate on -->
+<!ELEMENT PCT-Request_reqid (#PCDATA)>
+<!-- task to perform on request -->
+<!ELEMENT PCT-Request_type EMPTY>
+
+<!--
+    status	-  determine the completion status
+    cancel	-  cancel the request, if not completed
+-->
+<!ATTLIST PCT-Request_type value (
+        unknown |
+        status |
+        cancel
+        ) #REQUIRED >
+
+
+<!-- {Output} Status message of the task -->
+<!ELEMENT PCT-Status-Message (
+        PCT-Status-Message_status, 
+        PCT-Status-Message_message?, 
+        PCT-Status-Message_messages?)>
+
+<!-- task status -->
+<!ELEMENT PCT-Status-Message_status (PCT-Status)>
+
+<!-- message qualifying the status -->
+<!ELEMENT PCT-Status-Message_message (#PCDATA)>
+
+<!-- messages qualifying the status -->
+<!ELEMENT PCT-Status-Message_messages (PCT-Status-Message_messages_E*)>
+
+
+<!ELEMENT PCT-Status-Message_messages_E (#PCDATA)>
+
+<!-- {Output} Status of the task -->
+<!ELEMENT PCT-Status EMPTY>
+
+<!--
+    success	-  task completed successfully
+    server-error	-  request completion
+         general server failure
+    hit-limit	-  success, but hit limit reached
+    time-limit	-  success, but time limit reached
+    input-error	-  input errors
+         problem with input options
+    data-error	-  problem with input data
+    stopped	-  request management status
+         request was stopped
+    running	-  request is running
+    queued	-  request is queued
+-->
+<!ATTLIST PCT-Status value (
+        unknown |
+        success |
+        server-error |
+        hit-limit |
+        time-limit |
+        input-error |
+        data-error |
+        stopped |
+        running |
+        queued
+        ) #REQUIRED >
+
+
+<!-- {Output} Request ID and qualifying message for new task -->
+<!ELEMENT PCT-Waiting (
+        PCT-Waiting_reqid, 
+        PCT-Waiting_message?)>
+
+<!-- request id, required to obtain results or status -->
+<!ELEMENT PCT-Waiting_reqid (#PCDATA)>
+
+<!-- qualifying message regarding new request -->
+<!ELEMENT PCT-Waiting_message (#PCDATA)>
+
+<!-- {Input} Download data -->
+<!ELEMENT PCT-Download (
+        PCT-Download_uids, 
+        PCT-Download_format, 
+        PCT-Download_compression?, 
+        PCT-Download_use-3d?, 
+        PCT-Download_n-3d-conformers?, 
+        PCT-Download_get-single-record?)>
+
+<!-- record identifiers to download -->
+<!ELEMENT PCT-Download_uids (PCT-QueryUids)>
+<!-- format of the data to be downloaded, if supported by the service -->
+<!ELEMENT PCT-Download_format EMPTY>
+
+<!--
+    text-asn	-  full records
+         textual ASN.1
+    binary-asn	-  binary ASN.1
+    xml	-  textual XML
+    sdf	-  SD file format, for chemical structures
+    image	-  images, format is always .zip containing multiple .png
+         full-size depiction
+    image-small	-  thumbnail depiction
+    smiles	-  selected string fields, format is: SID/CID <tab> <string>
+         Isomeric SMILES
+    inchi	-  InChI
+-->
+<!ATTLIST PCT-Download_format value (
+        text-asn |
+        binary-asn |
+        xml |
+        sdf |
+        image |
+        image-small |
+        smiles |
+        inchi
+        ) #REQUIRED >
+
+<!-- compression type of the data to be downloaded -->
+<!-- default gzip -->
+<!ELEMENT PCT-Download_compression EMPTY>
+
+<!--
+    none	-  no compression
+    gzip	-  gzip format
+    bzip2	-  bzip2 format
+-->
+<!ATTLIST PCT-Download_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!--
+ whether to retrieve 3D records (when applicable) instead of 2D
+ default false (2D)
+-->
+<!ELEMENT PCT-Download_use-3d EMPTY>
+<!ATTLIST PCT-Download_use-3d value ( true | false ) #REQUIRED >
+
+
+<!--
+ if 3D, return up to N conformers for each structure (if conformers are not being
+ specified directly); not all records may have this many conformers, and upper limit 
+ of N is set by the PubChem 3D system (currently 10)
+ default 1
+-->
+<!ELEMENT PCT-Download_n-3d-conformers (#PCDATA)>
+
+<!--
+ if a single UID is provided, optionally retrieve that record synchronously in the
+ response object, without going through the usual waiting cycle and URL download
+ default false
+-->
+<!ELEMENT PCT-Download_get-single-record EMPTY>
+<!ATTLIST PCT-Download_get-single-record value ( true | false ) #REQUIRED >
+
+
+<!-- {Output} Results are available by using the provided URL -->
+<!ELEMENT PCT-Download-URL (
+        PCT-Download-URL_url, 
+        PCT-Download-URL_message?)>
+
+<!-- location of the result -->
+<!ELEMENT PCT-Download-URL_url (#PCDATA)>
+
+<!-- qualifying message -->
+<!ELEMENT PCT-Download-URL_message (#PCDATA)>
+
+<!-- {Input, Output} Unique identifier list -->
+<!ELEMENT PCT-ID-List (
+        PCT-ID-List_db, 
+        PCT-ID-List_uids)>
+
+<!-- id list qualifier, e.g., Entrez database name -->
+<!ELEMENT PCT-ID-List_db (#PCDATA)>
+
+<!-- id list may be empty, if no hits found -->
+<!ELEMENT PCT-ID-List_uids (PCT-ID-List_uids_E*)>
+
+
+<!ELEMENT PCT-ID-List_uids_E (#PCDATA)>
+
+<!-- {Input} Query request -->
+<!ELEMENT PCT-Query (
+        PCT-Query_type, 
+        PCT-Query_subset?, 
+        PCT-Query_options?)>
+
+<!-- query to be performed -->
+<!ELEMENT PCT-Query_type (PCT-QueryType*)>
+
+<!-- id subset to query against, entire DB used if empty -->
+<!ELEMENT PCT-Query_subset (PCT-QueryUids)>
+<!-- options on how to return results; applicability may vary depending on query type -->
+<!ELEMENT PCT-Query_options (
+        PCT-Query_options_webenv | 
+        PCT-Query_options_ids)>
+
+<!--
+ result id list should be inserted into this history;
+ response is PCT-OutputData.output.entrez (with new query key)
+-->
+<!ELEMENT PCT-Query_options_webenv (#PCDATA)>
+
+<!-- return at most this # ids (or all if zero), as PCT-OutputData.output.ids -->
+<!ELEMENT PCT-Query_options_ids (#PCDATA)>
+
+<!-- {Input} Query task to perform -->
+<!ELEMENT PCT-QueryType (
+        PCT-QueryType_css | 
+        PCT-QueryType_cel | 
+        PCT-QueryType_bas | 
+        PCT-QueryType_asd | 
+        PCT-QueryType_qas | 
+        PCT-QueryType_score-matrix | 
+        PCT-QueryType_e-link | 
+        PCT-QueryType_id-exchange | 
+        PCT-QueryType_pc3d)>
+
+<!-- PubChem Compound chemical structure search -->
+<!ELEMENT PCT-QueryType_css (PCT-QueryCompoundCS)>
+
+<!-- PubChem Compound Entrez limits search -->
+<!ELEMENT PCT-QueryType_cel (PCT-QueryCompoundEL)>
+
+<!-- PubChem BioAssay data search -->
+<!ELEMENT PCT-QueryType_bas (PCT-QueryAssayData)>
+
+<!-- PubChem BioAssay desription retrieval -->
+<!ELEMENT PCT-QueryType_asd (PCT-QueryAssayDescription)>
+
+<!-- PubChem BioActivity Summary, BioAssay-centric -->
+<!ELEMENT PCT-QueryType_qas (PCT-QueryActivitySummary)>
+
+<!-- Request a score matrix -->
+<!ELEMENT PCT-QueryType_score-matrix (PCT-QueryScoreMatrix)>
+
+<!-- Link expansion (like eLink but unlimited) -->
+<!ELEMENT PCT-QueryType_e-link (PCT-QueryELink)>
+
+<!-- ID Exchange  -->
+<!ELEMENT PCT-QueryType_id-exchange (PCT-QueryIDExchange)>
+
+<!-- 3D services -->
+<!ELEMENT PCT-QueryType_pc3d (PCT-QueryPC3D)>
+
+<!-- Holder for groups of Views (for internal use only) -->
+<!ELEMENT PCT-Views (PCT-View*)>
+
+<!-- {Input} Saved state of a web-application data view -->
+<!ELEMENT PCT-View (
+        PCT-View_badt | 
+        PCT-View_bads | 
+        PCT-View_baasa | 
+        PCT-View_baast | 
+        PCT-View_baasc | 
+        PCT-View_bahm | 
+        PCT-View_pcsc | 
+        PCT-View_banb | 
+        PCT-View_basp | 
+        PCT-View_bahg | 
+        PCT-View_conf | 
+        PCT-View_algn)>
+
+<!-- PubChem BioAssay Data Table Display -->
+<!ELEMENT PCT-View_badt (PCT-ViewAssayDataTable)>
+
+<!-- PubChem BioAssay Data Select Display -->
+<!ELEMENT PCT-View_bads (PCT-ViewAssayDataSelect)>
+
+<!-- PubChem BioActivity Summary, BioAssay-centric -->
+<!ELEMENT PCT-View_baasa (PCT-ViewActivitySummaryByBioAssay)>
+
+<!-- PubChem BioActivity Summary, Target-centric -->
+<!ELEMENT PCT-View_baast (PCT-ViewActivitySummaryByTarget)>
+
+<!-- PubChem BioActivity Summary, Compound-centric -->
+<!ELEMENT PCT-View_baasc (PCT-ViewActivitySummaryByCompound)>
+
+<!-- PubChem BioAssay HeatMap Display -->
+<!ELEMENT PCT-View_bahm (PCT-ViewAssayHeatMap)>
+
+<!-- PubChem Compound Structure Cluster Display -->
+<!ELEMENT PCT-View_pcsc (PCT-ViewStructureCluster)>
+
+<!-- PubChem BioAssay Neighbor Display -->
+<!ELEMENT PCT-View_banb (PCT-ViewAssayNeighbor)>
+
+<!-- PubChem BioAssay ScatterPlot Display -->
+<!ELEMENT PCT-View_basp (PCT-ViewAssayScatterPlot)>
+
+<!-- PubChem BioAssay Histogram Display -->
+<!ELEMENT PCT-View_bahg (PCT-ViewAssayHistogram)>
+
+<!-- PubChem Conformer Display -->
+<!ELEMENT PCT-View_conf (PCT-ViewConformer)>
+
+<!-- PubChem Conformer Alignment Display -->
+<!ELEMENT PCT-View_algn (PCT-ViewConformerAlignment)>
+
+<!-- {Input, Output} Unique identifier subset -->
+<!ELEMENT PCT-QueryUids (
+        PCT-QueryUids_entrez | 
+        PCT-QueryUids_ids | 
+        PCT-QueryUids_conformer-ids | 
+        PCT-QueryUids_source-ids | 
+        PCT-QueryUids_inchis | 
+        PCT-QueryUids_inchi-keys | 
+        PCT-QueryUids_synonyms)>
+
+<!-- Entrez history -->
+<!ELEMENT PCT-QueryUids_entrez (PCT-Entrez)>
+
+<!-- UID list -->
+<!ELEMENT PCT-QueryUids_ids (PCT-ID-List)>
+
+<!-- Conformer identifiers -->
+<!ELEMENT PCT-QueryUids_conformer-ids (PCT-QueryUids_conformer-ids_E*)>
+
+
+<!ELEMENT PCT-QueryUids_conformer-ids_E (#PCDATA)>
+
+<!-- IDs (registry) from a particular source -->
+<!ELEMENT PCT-QueryUids_source-ids (PCT-RegistryIDs)>
+
+<!-- InChI strings (full) -->
+<!ELEMENT PCT-QueryUids_inchis (PCT-QueryUids_inchis_E*)>
+
+
+<!ELEMENT PCT-QueryUids_inchis_E (#PCDATA)>
+
+<!-- InChI keys -->
+<!ELEMENT PCT-QueryUids_inchi-keys (PCT-QueryUids_inchi-keys_E*)>
+
+
+<!ELEMENT PCT-QueryUids_inchi-keys_E (#PCDATA)>
+
+<!-- Filtered synonyms -->
+<!ELEMENT PCT-QueryUids_synonyms (PCT-QueryUids_synonyms_E*)>
+
+
+<!ELEMENT PCT-QueryUids_synonyms_E (#PCDATA)>
+
+
+<!ELEMENT PCT-RegistryIDs (
+        PCT-RegistryIDs_source-name, 
+        PCT-RegistryIDs_source-ids)>
+
+<!-- PubChem Substance Data Source Name -->
+<!ELEMENT PCT-RegistryIDs_source-name (#PCDATA)>
+
+<!-- External Registry IDs -->
+<!ELEMENT PCT-RegistryIDs_source-ids (PCT-RegistryIDs_source-ids_E*)>
+
+
+<!ELEMENT PCT-RegistryIDs_source-ids_E (#PCDATA)>
+
+<!-- {Input, Output} Entrez (history) search description -->
+<!ELEMENT PCT-Entrez (
+        PCT-Entrez_db, 
+        PCT-Entrez_query-key?, 
+        PCT-Entrez_webenv?, 
+        PCT-Entrez_count?)>
+
+<!-- Entrez database identifier -->
+<!ELEMENT PCT-Entrez_db (#PCDATA)>
+
+<!-- Entrez history search query key -->
+<!ELEMENT PCT-Entrez_query-key (#PCDATA)>
+
+<!-- Entrez history web environment -->
+<!ELEMENT PCT-Entrez_webenv (#PCDATA)>
+
+<!-- Entrez history record count -->
+<!ELEMENT PCT-Entrez_count (#PCDATA)>
+
+<!-- {Input} PubChem Compound chemical structure query description -->
+<!ELEMENT PCT-QueryCompoundCS (
+        PCT-QueryCompoundCS_query, 
+        PCT-QueryCompoundCS_type, 
+        PCT-QueryCompoundCS_time?, 
+        PCT-QueryCompoundCS_results?)>
+<!-- chemical structure query -->
+<!ELEMENT PCT-QueryCompoundCS_query (
+        PCT-QueryCompoundCS_query_file | 
+        PCT-QueryCompoundCS_query_data | 
+        PCT-QueryCompoundCS_query_multi)>
+
+<!-- query is a file -->
+<!ELEMENT PCT-QueryCompoundCS_query_file (#PCDATA)>
+
+<!-- query is a string -->
+<!ELEMENT PCT-QueryCompoundCS_query_data (#PCDATA)>
+
+<!-- multiple queries as strings, one per line -->
+<!ELEMENT PCT-QueryCompoundCS_query_multi (PCT-QueryCompoundCS_query_multi_E*)>
+
+
+<!ELEMENT PCT-QueryCompoundCS_query_multi_E (#PCDATA)>
+<!-- chemical structure search type options -->
+<!ELEMENT PCT-QueryCompoundCS_type (
+        PCT-QueryCompoundCS_type_identical | 
+        PCT-QueryCompoundCS_type_subss | 
+        PCT-QueryCompoundCS_type_supss | 
+        PCT-QueryCompoundCS_type_similar | 
+        PCT-QueryCompoundCS_type_formula | 
+        PCT-QueryCompoundCS_type_conformer)>
+
+<!-- structure identity query -->
+<!ELEMENT PCT-QueryCompoundCS_type_identical (PCT-CSIdentity)>
+
+<!-- substructure query -->
+<!ELEMENT PCT-QueryCompoundCS_type_subss (PCT-CSStructure)>
+
+<!-- superstructure query -->
+<!ELEMENT PCT-QueryCompoundCS_type_supss (PCT-CSStructure)>
+
+<!-- similarity search query -->
+<!ELEMENT PCT-QueryCompoundCS_type_similar (PCT-CSSimilarity)>
+
+<!-- molecular formula query -->
+<!ELEMENT PCT-QueryCompoundCS_type_formula (PCT-CSMolFormula)>
+
+<!-- 3d conformer query -->
+<!ELEMENT PCT-QueryCompoundCS_type_conformer (PCT-SimilarConformer)>
+
+<!-- time limit (in CPU seconds) -->
+<!ELEMENT PCT-QueryCompoundCS_time (#PCDATA)>
+
+<!-- hit limit count -->
+<!ELEMENT PCT-QueryCompoundCS_results (#PCDATA)>
+
+<!-- {Input} PubChem Compound chemical structure identity search options -->
+<!ELEMENT PCT-CSIdentity (#PCDATA)>
+
+<!--
+    same-connectivity	-  must have same connectivity
+    any-tautomer	-  can be a tautomer of query, ignores stereo and isotopic substitution
+    same-stereo	-  must have same connectivity and stereo
+    same-isotope	-  must have same connectivity and isotopic substitutions
+    same-stereo-isotope	-  must have same connectivity, stereo, and isotopic substitutions
+    same-nonconflict-stereo	-  must have same connectivity and non-conflicting stereo
+    same-isotope-nonconflict-stereo	-  must have same connectivity, isotopic substitutions and non-conflicting stereo
+-->
+<!ATTLIST PCT-CSIdentity value (
+        undefined |
+        same-connectivity |
+        any-tautomer |
+        same-stereo |
+        same-isotope |
+        same-stereo-isotope |
+        same-nonconflict-stereo |
+        same-isotope-nonconflict-stereo
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound chemical structure molecular formula search options -->
+<!ELEMENT PCT-CSMolFormula (
+        PCT-CSMolFormula_allow-other?)>
+
+<!-- are elements not specified allowed to be present in the result -->
+<!ELEMENT PCT-CSMolFormula_allow-other EMPTY>
+<!ATTLIST PCT-CSMolFormula_allow-other value ( true | false ) #REQUIRED >
+
+
+<!-- {Input} PubChem Compound chemical structure similarity search options -->
+<!ELEMENT PCT-CSSimilarity (
+        PCT-CSSimilarity_threshold)>
+
+<!-- similarity search Tanimoto threshold -->
+<!ELEMENT PCT-CSSimilarity_threshold (#PCDATA)>
+
+<!-- {Input} 3d conformer query for similar conformers in PC Compound -->
+<!ELEMENT PCT-SimilarConformer (
+        PCT-SimilarConformer_sort?, 
+        PCT-SimilarConformer_output)>
+<!-- Conformer pair display order options -->
+<!ELEMENT PCT-SimilarConformer_sort (#PCDATA)>
+
+<!--
+    input-order	-  no ordering of results (default)
+    shape-then-feature	-  descending order of shape similarity then feature similarity
+    feature-then-shape	-  descending order of feature similarity then shape similarity
+    shape-and-feature	-  descending order of combined shape and feature similarity
+    numerical-id-order	-  ascending numeric ordering of conformer IDs
+-->
+<!ATTLIST PCT-SimilarConformer_sort value (
+        input-order |
+        shape-then-feature |
+        feature-then-shape |
+        shape-and-feature |
+        numerical-id-order
+        ) #IMPLIED >
+
+<!-- Selection of desired output type -->
+<!ELEMENT PCT-SimilarConformer_output (#PCDATA)>
+
+<!--
+    display	-  result is an URL to display results in PC3D web-viewer
+    sdf	-  result is an FTP URL to SDF text file
+    asn	-  result is an FTP URL to ASN.1 binary file
+    xml	-  result is an FTP URL to XML text file
+    csv	-  result is an FTP URL to CSV text file
+    entrez	-  result is an Entrez webenv
+-->
+<!ATTLIST PCT-SimilarConformer_output value (
+        display |
+        sdf |
+        asn |
+        xml |
+        csv |
+        entrez
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound chemical structure substructure and superstructure search options -->
+<!ELEMENT PCT-CSStructure (
+        PCT-CSStructure_stereo?, 
+        PCT-CSStructure_isotopes?, 
+        PCT-CSStructure_charges?, 
+        PCT-CSStructure_tautomers?, 
+        PCT-CSStructure_rings?, 
+        PCT-CSStructure_bonds?, 
+        PCT-CSStructure_chains?, 
+        PCT-CSStructure_hydrogen?)>
+<!-- stereo search options -->
+<!ELEMENT PCT-CSStructure_stereo (#PCDATA)>
+
+<!--
+    ignore	-  ignore stereochemistry (default, if not specified)
+    exact	-  match exact stereochemistry
+    relative	-  match relative stereochemistry
+    non-conflicting	-  match specified or non-specific stereo exactly
+-->
+<!ATTLIST PCT-CSStructure_stereo value (
+        ignore |
+        exact |
+        relative |
+        non-conflicting
+        ) #IMPLIED >
+
+
+<!-- match isotopes           (default false) -->
+<!ELEMENT PCT-CSStructure_isotopes EMPTY>
+<!ATTLIST PCT-CSStructure_isotopes value ( true | false ) #REQUIRED >
+
+
+<!-- match charges            (default false) -->
+<!ELEMENT PCT-CSStructure_charges EMPTY>
+<!ATTLIST PCT-CSStructure_charges value ( true | false ) #REQUIRED >
+
+
+<!-- match tautomers          (default false) -->
+<!ELEMENT PCT-CSStructure_tautomers EMPTY>
+<!ATTLIST PCT-CSStructure_tautomers value ( true | false ) #REQUIRED >
+
+
+<!-- ringsystems not embedded (default false) -->
+<!ELEMENT PCT-CSStructure_rings EMPTY>
+<!ATTLIST PCT-CSStructure_rings value ( true | false ) #REQUIRED >
+
+
+<!-- singe/double bonds match (default true) -->
+<!ELEMENT PCT-CSStructure_bonds EMPTY>
+<!ATTLIST PCT-CSStructure_bonds value ( true | false ) #REQUIRED >
+
+
+<!-- chain bonds match rings  (default true) -->
+<!ELEMENT PCT-CSStructure_chains EMPTY>
+<!ATTLIST PCT-CSStructure_chains value ( true | false ) #REQUIRED >
+
+
+<!-- strip hydrogens          (default false) -->
+<!ELEMENT PCT-CSStructure_hydrogen EMPTY>
+<!ATTLIST PCT-CSStructure_hydrogen value ( true | false ) #REQUIRED >
+
+
+<!-- {Input} PubChem Compound Entrez limits page query -->
+<!ELEMENT PCT-QueryCompoundEL (
+        PCT-QueryCompoundEL_property | 
+        PCT-QueryCompoundEL_element | 
+        PCT-QueryCompoundEL_atomstereo | 
+        PCT-QueryCompoundEL_bondstereo | 
+        PCT-QueryCompoundEL_activity | 
+        PCT-QueryCompoundEL_links | 
+        PCT-QueryCompoundEL_category | 
+        PCT-QueryCompoundEL_source)>
+
+<!-- PubChem Compound Entrez limits by property -->
+<!ELEMENT PCT-QueryCompoundEL_property (PCT-CLByProperty)>
+
+<!-- PubChem Compound Entrez limits by chemical element -->
+<!ELEMENT PCT-QueryCompoundEL_element (PCT-CLByChemicalElement)>
+
+<!-- PubChem Compound Entrez limits by atom chiral centers -->
+<!ELEMENT PCT-QueryCompoundEL_atomstereo (PCT-CLByStereo)>
+
+<!-- PubChem Compound Entrez limits by E/Z bond isomers -->
+<!ELEMENT PCT-QueryCompoundEL_bondstereo (PCT-CLByStereo)>
+
+<!-- PubChem Compound Entrez limits by biological activity -->
+<!ELEMENT PCT-QueryCompoundEL_activity (PCT-CLByBioActivity)>
+
+<!-- PubChem Compound Entrez limits by entrez links -->
+<!ELEMENT PCT-QueryCompoundEL_links (PCT-CLByLinks)>
+
+<!-- PubChem Compound Entrez limits by depositor category -->
+<!ELEMENT PCT-QueryCompoundEL_category (PCT-CLByString)>
+
+<!-- PubChem Compound Entrez limits by data source -->
+<!ELEMENT PCT-QueryCompoundEL_source (PCT-CLByString)>
+
+<!-- {Input} PubChem Compound Entrez Limits Search -->
+<!ELEMENT PCT-CLByProperty (
+        PCT-CLByProperty_type, 
+        PCT-CLByProperty_range)>
+
+<!ELEMENT PCT-CLByProperty_type (#PCDATA)>
+
+<!--
+    mw	-  Molecular Weight                 (FLOAT)
+    xlogp	-  xLogP                            (FLOAT)
+    hbd	-  Count of Hydrogen Bond Donors    (INTGER)
+    hba	-  Count of Hydrogen Bond Acceptors (INTEGER)
+    rb	-  Count of Rotatable Bonds         (INTEGER)
+    tpsa	-  Topological Polar Surface Area   (FLOAT)
+    ha	-  Count of Heavy Atoms             (INTEGER)
+    isotope	-  Count of Specified Isotopes      (INTEGER)
+    tautomer	-  Count of Tautomers               (INTEGER)
+    cu	-  Count of Covalent Units          (INTEGER)
+    complexity	-  Structure Complexity             (FLOAT)
+    charge	-  Formal Charge                    (INTGER)
+-->
+<!ATTLIST PCT-CLByProperty_type value (
+        mw |
+        xlogp |
+        hbd |
+        hba |
+        rb |
+        tpsa |
+        ha |
+        isotope |
+        tautomer |
+        cu |
+        complexity |
+        charge
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-CLByProperty_range (
+        PCT-CLByProperty_range_frange | 
+        PCT-CLByProperty_range_irange)>
+
+<!-- Floating Point Range Specification -->
+<!ELEMENT PCT-CLByProperty_range_frange (PCT-CLFloatRange)>
+
+<!-- Integer Point Range Specification -->
+<!ELEMENT PCT-CLByProperty_range_irange (PCT-CLIntegerRange)>
+
+<!-- {Input} PubChem Compound Entrez Limits Floating Point Search Range -->
+<!ELEMENT PCT-CLFloatRange (
+        PCT-CLFloatRange_lower, 
+        PCT-CLFloatRange_upper)>
+
+<!-- Lower bound of the search range -->
+<!ELEMENT PCT-CLFloatRange_lower (#PCDATA)>
+
+<!-- Upper bound of the search range -->
+<!ELEMENT PCT-CLFloatRange_upper (#PCDATA)>
+
+<!-- {Input} PubChem Compound Entrez Limits Floating Point Search Range -->
+<!ELEMENT PCT-CLIntegerRange (
+        PCT-CLIntegerRange_lower, 
+        PCT-CLIntegerRange_upper)>
+
+<!-- Lower bound of the search range -->
+<!ELEMENT PCT-CLIntegerRange_lower (#PCDATA)>
+
+<!-- Upper bound of the search range -->
+<!ELEMENT PCT-CLIntegerRange_upper (#PCDATA)>
+
+<!-- {Input} PubChem Compound Entrez Limits Search by Chemical Element -->
+<!ELEMENT PCT-CLByChemicalElement (
+        PCT-CLByChemicalElement_qualifier, 
+        PCT-CLByChemicalElement_element)>
+
+<!ELEMENT PCT-CLByChemicalElement_qualifier (#PCDATA)>
+
+<!--
+    must	-  Structure must contain
+    must-not	-  Structure must not contain
+-->
+<!ATTLIST PCT-CLByChemicalElement_qualifier value (
+        must |
+        must-not
+        ) #IMPLIED >
+
+
+<!-- Chemical Element -->
+<!ELEMENT PCT-CLByChemicalElement_element (PCT-Element)>
+
+<!-- {Input} Elements -->
+<!ELEMENT PCT-Element (#PCDATA)>
+<!ATTLIST PCT-Element value (
+        h |
+        he |
+        li |
+        be |
+        b |
+        c |
+        n |
+        o |
+        f |
+        ne |
+        na |
+        mg |
+        al |
+        si |
+        p |
+        s |
+        cl |
+        ar |
+        k |
+        ca |
+        sc |
+        ti |
+        v |
+        cr |
+        mn |
+        fe |
+        co |
+        ni |
+        cu |
+        zn |
+        ga |
+        ge |
+        as |
+        se |
+        br |
+        kr |
+        rb |
+        sr |
+        y |
+        zr |
+        nb |
+        mo |
+        tc |
+        ru |
+        rh |
+        pd |
+        ag |
+        cd |
+        in |
+        sn |
+        sb |
+        te |
+        i |
+        xe |
+        cs |
+        ba |
+        la |
+        ce |
+        pr |
+        nd |
+        pm |
+        sm |
+        eu |
+        gd |
+        tb |
+        dy |
+        ho |
+        er |
+        tm |
+        yb |
+        lu |
+        hf |
+        ta |
+        w |
+        re |
+        os |
+        ir |
+        pt |
+        au |
+        hg |
+        tl |
+        pb |
+        bi |
+        po |
+        at |
+        rn |
+        fr |
+        ra |
+        ac |
+        th |
+        pa |
+        u |
+        np |
+        pu |
+        am |
+        cm |
+        bk |
+        cf |
+        es |
+        fm |
+        md |
+        no |
+        lr |
+        rf |
+        db |
+        sg |
+        bh |
+        hs |
+        mt |
+        ds |
+        rg
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound Entrez Limits Search by StereoChemistry -->
+<!ELEMENT PCT-CLByStereo (
+        PCT-CLByStereo_qualifier, 
+        PCT-CLByStereo_contain)>
+
+<!ELEMENT PCT-CLByStereo_qualifier (#PCDATA)>
+
+<!--
+    must	-  Structure must contain
+    must-not	-  Structure must not contain
+-->
+<!ATTLIST PCT-CLByStereo_qualifier value (
+        must |
+        must-not
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-CLByStereo_contain (#PCDATA)>
+
+<!--
+    fully-specified	-  Structure contains fully-specified stereo
+    partially-specified	-  Structure contains partially-specified stereo
+    fully-unspecified	-  Structure contains fully-unspecified stereo
+-->
+<!ATTLIST PCT-CLByStereo_contain value (
+        fully-specified |
+        partially-specified |
+        fully-unspecified
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound Entrez Limits Search -->
+<!ELEMENT PCT-CLByBioActivity (#PCDATA)>
+<!ATTLIST PCT-CLByBioActivity value (
+        not-tested |
+        tested |
+        active |
+        inactive
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound Entrez Limits Search -->
+<!ELEMENT PCT-CLByLinks (
+        PCT-CLByLinks_qualifier, 
+        PCT-CLByLinks_db)>
+
+<!ELEMENT PCT-CLByLinks_qualifier (#PCDATA)>
+
+<!--
+    must	-  Structure must have
+    must-not	-  Structure must not have
+-->
+<!ATTLIST PCT-CLByLinks_qualifier value (
+        must |
+        must-not
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-CLByLinks_db (#PCDATA)>
+
+<!--
+    pubmed	-  Link to PubMed Entrez DB
+    protein	-  Link to Protein Entrez DB
+    mesh	-  Link to MeSH Entrez DB
+    pubmed-via-mesh	-  Link to PubMed-via-MeSH
+    nucleotide	-  Link to Nucleotide Entrez DB
+    protein-3d-structure	-  Link to MMDB Entrez DB
+    pharmacological-action	-  Link to MeSH Pharmacological Action
+-->
+<!ATTLIST PCT-CLByLinks_db value (
+        pubmed |
+        protein |
+        mesh |
+        pubmed-via-mesh |
+        nucleotide |
+        protein-3d-structure |
+        pharmacological-action
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem Compound Entrez Limits Search by String -->
+<!ELEMENT PCT-CLByString (
+        PCT-CLByString_qualifier, 
+        PCT-CLByString_category)>
+
+<!ELEMENT PCT-CLByString_qualifier (#PCDATA)>
+
+<!--
+    must	-  Structure must have
+    must-not	-  Structure must not have
+-->
+<!ATTLIST PCT-CLByString_qualifier value (
+        must |
+        must-not
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-CLByString_category (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Data Query -->
+<!ELEMENT PCT-QueryAssayData (
+        PCT-QueryAssayData_output, 
+        PCT-QueryAssayData_aids, 
+        PCT-QueryAssayData_scids?, 
+        PCT-QueryAssayData_dataset?, 
+        PCT-QueryAssayData_readouts?, 
+        PCT-QueryAssayData_focus?, 
+        PCT-QueryAssayData_compression?)>
+<!-- data output method -->
+<!ELEMENT PCT-QueryAssayData_output (#PCDATA)>
+
+<!--
+    assay-xml	-  XML format using PubChem BioAssay data specification
+    assay-text-asn	-  text ASN.1 format using PubChem BioAssay data specification
+    assay-binary-asn	-  binary ASN.1 format using PubChem BioAssay data specification
+    csv	-  CSV data format
+-->
+<!ATTLIST PCT-QueryAssayData_output value (
+        assay-xml |
+        assay-text-asn |
+        assay-binary-asn |
+        csv
+        ) #IMPLIED >
+
+
+<!-- AIDs to retrieve -->
+<!ELEMENT PCT-QueryAssayData_aids (PCT-QueryUids)>
+
+<!-- Restrict rows to these SIDs or CIDs -->
+<!ELEMENT PCT-QueryAssayData_scids (PCT-QueryUids)>
+
+<!ELEMENT PCT-QueryAssayData_dataset (#PCDATA)>
+
+<!--
+    complete	-  detail view
+    concise	-  summary view
+-->
+<!ATTLIST PCT-QueryAssayData_dataset value (
+        complete |
+        concise
+        ) #IMPLIED >
+
+
+<!-- Query/restrict bioassay readouts -->
+<!ELEMENT PCT-QueryAssayData_readouts (PCT-Assay-Readout*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-QueryAssayData_focus (PCT-Assay-FocusOption)>
+
+<!-- default gzip -->
+<!ELEMENT PCT-QueryAssayData_compression EMPTY>
+
+<!--
+    none	-  no compression
+    gzip	-  gzip (.gz) format
+    bzip2	-  bzip2 (.bz2) format
+-->
+<!ATTLIST PCT-QueryAssayData_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!-- {Input} PubChem Activity Summary Query -->
+<!ELEMENT PCT-QueryActivitySummary (
+        PCT-QueryActivitySummary_output, 
+        PCT-QueryActivitySummary_type, 
+        PCT-QueryActivitySummary_aids?, 
+        PCT-QueryActivitySummary_scids?, 
+        PCT-QueryActivitySummary_focus?, 
+        PCT-QueryActivitySummary_compression?)>
+<!-- data output method -->
+<!ELEMENT PCT-QueryActivitySummary_output (#PCDATA)>
+
+<!--
+    summary-table	-  Summary table in CSV data format
+-->
+<!ATTLIST PCT-QueryActivitySummary_output value (
+        summary-table
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-QueryActivitySummary_type (#PCDATA)>
+
+<!--
+    assay-central	-  Each row of the table shows one assay  
+-->
+<!ATTLIST PCT-QueryActivitySummary_type value (
+        assay-central
+        ) #IMPLIED >
+
+
+<!--
+ BioActivity Summary can start from a list of aids,
+   a list of cids/sids, or a combination of both
+-->
+<!ELEMENT PCT-QueryActivitySummary_aids (PCT-QueryUids)>
+
+<!-- A list of compound IDs or substance IDs -->
+<!ELEMENT PCT-QueryActivitySummary_scids (PCT-QueryUids)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-QueryActivitySummary_focus (PCT-Assay-FocusOption)>
+
+<!-- default gzip -->
+<!ELEMENT PCT-QueryActivitySummary_compression EMPTY>
+
+<!--
+    none	-  no compression
+    gzip	-  gzip (.gz) format
+    bzip2	-  bzip2 (.bz2) format
+-->
+<!ATTLIST PCT-QueryActivitySummary_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!-- {Input} PubChem BioAssay Data Table Display -->
+<!ELEMENT PCT-ViewAssayDataTable (
+        PCT-ViewAssayDataTable_id, 
+        PCT-ViewAssayDataTable_dataset?, 
+        PCT-ViewAssayDataTable_readouts?, 
+        PCT-ViewAssayDataTable_focus?, 
+        PCT-ViewAssayDataTable_other?, 
+        PCT-ViewAssayDataTable_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayDataTable_id (PCT-ID-List*)>
+
+<!ELEMENT PCT-ViewAssayDataTable_dataset (#PCDATA)>
+
+<!--
+    complete	-  detail view
+    concise	-  summary view
+-->
+<!ATTLIST PCT-ViewAssayDataTable_dataset value (
+        complete |
+        concise
+        ) #IMPLIED >
+
+
+<!-- Query/restrict bioassay readouts -->
+<!ELEMENT PCT-ViewAssayDataTable_readouts (PCT-Assay-Readout*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayDataTable_focus (PCT-Assay-FocusOption)>
+
+<!-- Other options -->
+<!ELEMENT PCT-ViewAssayDataTable_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayDataTable_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Data Select Display -->
+<!ELEMENT PCT-ViewAssayDataSelect (
+        PCT-ViewAssayDataSelect_id, 
+        PCT-ViewAssayDataSelect_readouts?, 
+        PCT-ViewAssayDataSelect_focus?, 
+        PCT-ViewAssayDataSelect_other?, 
+        PCT-ViewAssayDataSelect_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayDataSelect_id (PCT-ID-List*)>
+
+<!-- Query/restrict bioassay readouts -->
+<!ELEMENT PCT-ViewAssayDataSelect_readouts (PCT-Assay-Readout*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayDataSelect_focus (PCT-Assay-FocusOption)>
+
+<!-- Other options -->
+<!ELEMENT PCT-ViewAssayDataSelect_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayDataSelect_url (#PCDATA)>
+
+<!-- {Input} PubChem BioActivity Summary, BioAssay-centric -->
+<!ELEMENT PCT-ViewActivitySummaryByBioAssay (
+        PCT-ViewActivitySummaryByBioAssay_id, 
+        PCT-ViewActivitySummaryByBioAssay_focus?, 
+        PCT-ViewActivitySummaryByBioAssay_other?, 
+        PCT-ViewActivitySummaryByBioAssay_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewActivitySummaryByBioAssay_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewActivitySummaryByBioAssay_focus (PCT-Assay-FocusOption)>
+
+<!-- Other options -->
+<!ELEMENT PCT-ViewActivitySummaryByBioAssay_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewActivitySummaryByBioAssay_url (#PCDATA)>
+
+<!-- {Input} PubChem BioActivity Summary, Target-centric -->
+<!ELEMENT PCT-ViewActivitySummaryByTarget (
+        PCT-ViewActivitySummaryByTarget_id, 
+        PCT-ViewActivitySummaryByTarget_focus?, 
+        PCT-ViewActivitySummaryByTarget_other?, 
+        PCT-ViewActivitySummaryByTarget_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewActivitySummaryByTarget_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewActivitySummaryByTarget_focus (PCT-Assay-FocusOption)>
+
+<!-- Other options -->
+<!ELEMENT PCT-ViewActivitySummaryByTarget_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewActivitySummaryByTarget_url (#PCDATA)>
+
+<!-- {Input} PubChem BioActivity Summary, Compound-centric -->
+<!ELEMENT PCT-ViewActivitySummaryByCompound (
+        PCT-ViewActivitySummaryByCompound_id, 
+        PCT-ViewActivitySummaryByCompound_focus?, 
+        PCT-ViewActivitySummaryByCompound_other?, 
+        PCT-ViewActivitySummaryByCompound_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewActivitySummaryByCompound_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewActivitySummaryByCompound_focus (PCT-Assay-FocusOption)>
+
+<!-- Other options -->
+<!ELEMENT PCT-ViewActivitySummaryByCompound_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewActivitySummaryByCompound_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay HeatMap Display -->
+<!ELEMENT PCT-ViewAssayHeatMap (
+        PCT-ViewAssayHeatMap_id, 
+        PCT-ViewAssayHeatMap_focus?, 
+        PCT-ViewAssayHeatMap_other?, 
+        PCT-ViewAssayHeatMap_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayHeatMap_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayHeatMap_focus (PCT-Assay-FocusOption)>
+
+<!-- Other Options -->
+<!ELEMENT PCT-ViewAssayHeatMap_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayHeatMap_url (#PCDATA)>
+
+<!-- {Input} PubChem Compound Structure Cluster Display -->
+<!ELEMENT PCT-ViewStructureCluster (
+        PCT-ViewStructureCluster_id, 
+        PCT-ViewStructureCluster_focus?, 
+        PCT-ViewStructureCluster_other?, 
+        PCT-ViewStructureCluster_url?)>
+
+<!-- Identifiers (CID) considered -->
+<!ELEMENT PCT-ViewStructureCluster_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewStructureCluster_focus (PCT-Assay-FocusOption)>
+
+<!-- Other Options -->
+<!ELEMENT PCT-ViewStructureCluster_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewStructureCluster_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Neighbor Display -->
+<!ELEMENT PCT-ViewAssayNeighbor (
+        PCT-ViewAssayNeighbor_id, 
+        PCT-ViewAssayNeighbor_focus?, 
+        PCT-ViewAssayNeighbor_other?, 
+        PCT-ViewAssayNeighbor_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayNeighbor_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayNeighbor_focus (PCT-Assay-FocusOption)>
+
+<!-- Other Options -->
+<!ELEMENT PCT-ViewAssayNeighbor_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayNeighbor_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay ScatterPlot Display -->
+<!ELEMENT PCT-ViewAssayScatterPlot (
+        PCT-ViewAssayScatterPlot_id, 
+        PCT-ViewAssayScatterPlot_focus?, 
+        PCT-ViewAssayScatterPlot_other?, 
+        PCT-ViewAssayScatterPlot_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayScatterPlot_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayScatterPlot_focus (PCT-Assay-FocusOption)>
+
+<!-- Other Options -->
+<!ELEMENT PCT-ViewAssayScatterPlot_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayScatterPlot_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Histogram Display -->
+<!ELEMENT PCT-ViewAssayHistogram (
+        PCT-ViewAssayHistogram_id, 
+        PCT-ViewAssayHistogram_focus?, 
+        PCT-ViewAssayHistogram_other?, 
+        PCT-ViewAssayHistogram_url?)>
+
+<!-- Identifiers (AID/SID/CID) considered -->
+<!ELEMENT PCT-ViewAssayHistogram_id (PCT-ID-List*)>
+
+<!-- Data focus options -->
+<!ELEMENT PCT-ViewAssayHistogram_focus (PCT-Assay-FocusOption)>
+
+<!-- Other Options -->
+<!ELEMENT PCT-ViewAssayHistogram_other (PCT-Assay-OtherOption*)>
+
+<!-- Originator URL of View       (where to replay) -->
+<!ELEMENT PCT-ViewAssayHistogram_url (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Display and Filtering by Readout -->
+<!ELEMENT PCT-Assay-Readout (
+        PCT-Assay-Readout_aid, 
+        PCT-Assay-Readout_version?, 
+        PCT-Assay-Readout_revision?, 
+        PCT-Assay-Readout_retrieve?, 
+        PCT-Assay-Readout_query?, 
+        PCT-Assay-Readout_result-version?)>
+
+<!-- Assay Identifier -->
+<!ELEMENT PCT-Assay-Readout_aid (#PCDATA)>
+
+<!-- Assay Version              (defaults to current) -->
+<!ELEMENT PCT-Assay-Readout_version (#PCDATA)>
+
+<!-- Assay Revision             (defaults to current) -->
+<!ELEMENT PCT-Assay-Readout_revision (#PCDATA)>
+
+<!-- Assay Data Readouts (TIDs) (defaults to all data) -->
+<!ELEMENT PCT-Assay-Readout_retrieve (PCT-Assay-Readout_retrieve_E*)>
+
+
+<!ELEMENT PCT-Assay-Readout_retrieve_E (#PCDATA)>
+
+<!-- Filter Assay Data by Readout -->
+<!ELEMENT PCT-Assay-Readout_query (PCT-Assay-Readout-Query*)>
+<!-- assay test result version to query against -->
+<!ELEMENT PCT-Assay-Readout_result-version (#PCDATA)>
+
+<!--
+    current	-  Current Assay Test Result                 (default, if not specified)
+    allversion	-  All Assay Result Versions         (only for single assay search/view)
+-->
+<!ATTLIST PCT-Assay-Readout_result-version value (
+        current |
+        allversion
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem BioAssay Readout Query (restricts assay data) -->
+<!ELEMENT PCT-Assay-Readout-Query (
+        PCT-Assay-Readout-Query_iquery | 
+        PCT-Assay-Readout-Query_fquery | 
+        PCT-Assay-Readout-Query_squery | 
+        PCT-Assay-Readout-Query_bquery | 
+        PCT-Assay-Readout-Query_score | 
+        PCT-Assay-Readout-Query_outcome)>
+
+<!-- Filter data by integer readout -->
+<!ELEMENT PCT-Assay-Readout-Query_iquery (PCT-Assay-Readout-Integer-Query)>
+
+<!-- Filter data by floating-point readout -->
+<!ELEMENT PCT-Assay-Readout-Query_fquery (PCT-Assay-Readout-Float-Query)>
+
+<!-- Filter data by string readout -->
+<!ELEMENT PCT-Assay-Readout-Query_squery (PCT-Assay-Readout-String-Query)>
+
+<!-- Filter data by boolean readout -->
+<!ELEMENT PCT-Assay-Readout-Query_bquery (PCT-Assay-Readout-Boolean-Query)>
+
+<!-- Filter data by activity score -->
+<!ELEMENT PCT-Assay-Readout-Query_score (PCT-Assay-Activity-Score-Query)>
+
+<!-- Filter data by activity outcome -->
+<!ELEMENT PCT-Assay-Readout-Query_outcome (PCT-Assay-Activity-Outcome-Query)>
+
+<!-- {Input} PubChem BioAssay Integer Readout Query -->
+<!ELEMENT PCT-Assay-Readout-Integer-Query (
+        PCT-Assay-Readout-Integer-Query_tid, 
+        PCT-Assay-Readout-Integer-Query_lower?, 
+        PCT-Assay-Readout-Integer-Query_upper?)>
+
+<!-- assay readout identifier -->
+<!ELEMENT PCT-Assay-Readout-Integer-Query_tid (#PCDATA)>
+
+<!--
+ either lower or upper or both must be specified
+ lower bound of range query
+-->
+<!ELEMENT PCT-Assay-Readout-Integer-Query_lower (#PCDATA)>
+
+<!-- upper bound of range query -->
+<!ELEMENT PCT-Assay-Readout-Integer-Query_upper (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Floating-point Readout Query -->
+<!ELEMENT PCT-Assay-Readout-Float-Query (
+        PCT-Assay-Readout-Float-Query_tid, 
+        PCT-Assay-Readout-Float-Query_lower?, 
+        PCT-Assay-Readout-Float-Query_upper?)>
+
+<!-- assay readout identifier -->
+<!ELEMENT PCT-Assay-Readout-Float-Query_tid (#PCDATA)>
+
+<!--
+ either lower or upper or both must be specified
+ lower bound of range query
+-->
+<!ELEMENT PCT-Assay-Readout-Float-Query_lower (#PCDATA)>
+
+<!-- upper bound of range query -->
+<!ELEMENT PCT-Assay-Readout-Float-Query_upper (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay String-based Readout Query -->
+<!ELEMENT PCT-Assay-Readout-String-Query (
+        PCT-Assay-Readout-String-Query_tid, 
+        PCT-Assay-Readout-String-Query_match)>
+
+<!-- assay readout identifier -->
+<!ELEMENT PCT-Assay-Readout-String-Query_tid (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Readout-String-Query_match (
+        PCT-Assay-Readout-String-Query_match_pattern | 
+        PCT-Assay-Readout-String-Query_match_exact)>
+
+<!-- Readout value must contain string -->
+<!ELEMENT PCT-Assay-Readout-String-Query_match_pattern (#PCDATA)>
+
+<!-- Readout value must exactly match string -->
+<!ELEMENT PCT-Assay-Readout-String-Query_match_exact (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Boolean Readout Query -->
+<!ELEMENT PCT-Assay-Readout-Boolean-Query (
+        PCT-Assay-Readout-Boolean-Query_tid, 
+        PCT-Assay-Readout-Boolean-Query_bvalue)>
+
+<!-- assay readout identifier -->
+<!ELEMENT PCT-Assay-Readout-Boolean-Query_tid (#PCDATA)>
+
+<!-- desired boolean value -->
+<!ELEMENT PCT-Assay-Readout-Boolean-Query_bvalue EMPTY>
+<!ATTLIST PCT-Assay-Readout-Boolean-Query_bvalue value ( true | false ) #REQUIRED >
+
+
+<!-- {Input} PubChem BioAssay Activity Score Query -->
+<!ELEMENT PCT-Assay-Activity-Score-Query (
+        PCT-Assay-Activity-Score-Query_lower?, 
+        PCT-Assay-Activity-Score-Query_upper?)>
+
+<!--
+ either lower or upper or both must be specified
+ lower bound of range query
+-->
+<!ELEMENT PCT-Assay-Activity-Score-Query_lower (#PCDATA)>
+
+<!-- upper bound of range query -->
+<!ELEMENT PCT-Assay-Activity-Score-Query_upper (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay Activity Outcome Query -->
+<!ELEMENT PCT-Assay-Activity-Outcome-Query (#PCDATA)>
+
+<!--
+    all	-  All                                      (default, if not specified)
+    inactive	-  Inactive
+    active	-  Active
+    inconclusive	-  Inconclusive
+    unspecified	-  Unspecified
+-->
+<!ATTLIST PCT-Assay-Activity-Outcome-Query value (
+        all |
+        inactive |
+        active |
+        inconclusive |
+        unspecified
+        ) #IMPLIED >
+
+
+<!-- {Input} PubChem BioAssay other options for query and display -->
+<!ELEMENT PCT-Assay-OtherOption (
+        PCT-Assay-OtherOption_name, 
+        PCT-Assay-OtherOption_value, 
+        PCT-Assay-OtherOption_comment?)>
+
+<!-- parameter name -->
+<!ELEMENT PCT-Assay-OtherOption_name (#PCDATA)>
+<!-- parameter value -->
+<!ELEMENT PCT-Assay-OtherOption_value (
+        PCT-Assay-OtherOption_value_ival | 
+        PCT-Assay-OtherOption_value_fval | 
+        PCT-Assay-OtherOption_value_bval | 
+        PCT-Assay-OtherOption_value_sval)>
+
+<!ELEMENT PCT-Assay-OtherOption_value_ival (#PCDATA)>
+
+<!ELEMENT PCT-Assay-OtherOption_value_fval (#PCDATA)>
+
+<!ELEMENT PCT-Assay-OtherOption_value_bval EMPTY>
+<!ATTLIST PCT-Assay-OtherOption_value_bval value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-Assay-OtherOption_value_sval (#PCDATA)>
+
+<!-- parameter comment -->
+<!ELEMENT PCT-Assay-OtherOption_comment (#PCDATA)>
+
+<!-- {Input} PubChem BioAssay data focus options -->
+<!ELEMENT PCT-Assay-FocusOption (
+        PCT-Assay-FocusOption_group-results-by?, 
+        PCT-Assay-FocusOption_duplicate-test-option?)>
+<!-- Focus of the data view, e.g., substance or compound. -->
+<!ELEMENT PCT-Assay-FocusOption_group-results-by (#PCDATA)>
+
+<!--
+    compound	-  Compound            (default, if not specified)
+    compound-same-connectivity	-  Compound, Same Connectivity
+    parent	-  Parent Compound
+    parent-same-connectivity	-  Parent Compound, Same Connectivity
+    substance	-  Substance
+-->
+<!ATTLIST PCT-Assay-FocusOption_group-results-by value (
+        compound |
+        compound-same-connectivity |
+        parent |
+        parent-same-connectivity |
+        substance
+        ) #IMPLIED >
+
+<!-- Duplicate BioAssay Result Handling -->
+<!ELEMENT PCT-Assay-FocusOption_duplicate-test-option (#PCDATA)>
+
+<!--
+    flag-discrepencies	-  Flag Discrepancies      (default, if not specified)
+    exclude-duplicate	-  Exclude Duplicates
+    most-recent	-  Most Recent
+    most-active	-  Most Active
+    least-active	-  Least Active
+    show-discrepant-only	-  Show discrepant only
+-->
+<!ATTLIST PCT-Assay-FocusOption_duplicate-test-option value (
+        flag-discrepencies |
+        exclude-duplicate |
+        most-recent |
+        most-active |
+        least-active |
+        show-discrepant-only
+        ) #IMPLIED >
+
+
+<!-- (Input) PubChem Chemical Structure Standardization -->
+<!ELEMENT PCT-Standardize (
+        PCT-Standardize_structure, 
+        PCT-Standardize_oformat)>
+
+<!-- chemical structure input -->
+<!ELEMENT PCT-Standardize_structure (PCT-Structure)>
+
+<!-- structure output format -->
+<!ELEMENT PCT-Standardize_oformat (PCT-StructureFormat)>
+
+<!-- (Input/Output) Single PubChem Structure -->
+<!ELEMENT PCT-Structure (
+        PCT-Structure_structure, 
+        PCT-Structure_format, 
+        PCT-Structure_compression?)>
+<!-- chemical structure input -->
+<!ELEMENT PCT-Structure_structure (
+        PCT-Structure_structure_binary | 
+        PCT-Structure_structure_string | 
+        PCT-Structure_structure_strings)>
+
+<!-- Input is a file -->
+<!ELEMENT PCT-Structure_structure_binary (#PCDATA)>
+
+<!-- Single-line text -->
+<!ELEMENT PCT-Structure_structure_string (#PCDATA)>
+
+<!-- Multi-line text -->
+<!ELEMENT PCT-Structure_structure_strings (PCT-Structure_structure_strings_E*)>
+
+
+<!ELEMENT PCT-Structure_structure_strings_E (#PCDATA)>
+
+<!-- chemical structure format -->
+<!ELEMENT PCT-Structure_format (PCT-StructureFormat)>
+<!-- compression type of the data to be downloaded -->
+<!-- Default is no compression -->
+<!ELEMENT PCT-Structure_compression EMPTY>
+
+<!--
+    none	-  no compression
+    gzip	-  gzip format
+    bzip2	-  bzip2 format
+-->
+<!ATTLIST PCT-Structure_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!-- (Input/Output) PubChem Structure Format -->
+<!ELEMENT PCT-StructureFormat EMPTY>
+
+<!--
+    asnb	-  PubChem ASN.1 Binary Format
+    asnt	-  PubChem ASN.1 Text Format
+    xml	-  PubChem XML Format
+    sdf	-  SDF Format
+    smiles	-  SMILES Format
+    inchi	-  InChI Format
+-->
+<!ATTLIST PCT-StructureFormat value (
+        asnb |
+        asnt |
+        xml |
+        sdf |
+        smiles |
+        inchi
+        ) #REQUIRED >
+
+
+<!--
+ (Input) Assay Description Query;
+ Select which fields are of interest
+-->
+<!ELEMENT PCT-QueryAssayDescription (
+        PCT-QueryAssayDescription_aid, 
+        PCT-QueryAssayDescription_get-name?, 
+        PCT-QueryAssayDescription_get-description?, 
+        PCT-QueryAssayDescription_get-protocol?, 
+        PCT-QueryAssayDescription_get-comment?, 
+        PCT-QueryAssayDescription_get-columns?, 
+        PCT-QueryAssayDescription_get-method?, 
+        PCT-QueryAssayDescription_get-target?, 
+        PCT-QueryAssayDescription_get-version?, 
+        PCT-QueryAssayDescription_get-counts?, 
+        PCT-QueryAssayDescription_get-full-description?)>
+
+<!ELEMENT PCT-QueryAssayDescription_aid (#PCDATA)>
+
+<!-- to retrieve individual bits of information; returns PCT-Assay-Descr -->
+<!ELEMENT PCT-QueryAssayDescription_get-name EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-name value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-description EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-description value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-protocol EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-protocol value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-comment EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-comment value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-columns EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-columns value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-method EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-method value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-target EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-target value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-version EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-version value ( true | false ) #REQUIRED >
+
+
+<!ELEMENT PCT-QueryAssayDescription_get-counts EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-counts value ( true | false ) #REQUIRED >
+
+<!-- to get the entire description blob as PubChem Assay ASN.1/XML; returns PCT-DataBlob -->
+<!ELEMENT PCT-QueryAssayDescription_get-full-description EMPTY>
+<!ATTLIST PCT-QueryAssayDescription_get-full-description value (
+        asnt |
+        asnb |
+        xml
+        ) #REQUIRED >
+
+
+<!--
+ (Output) Assay Desription Information
+ Note this is a subset/simplification of the full 
+ PC-AssayDescription in pcassay.asn
+-->
+<!ELEMENT PCT-Assay-Descr (
+        PCT-Assay-Descr_aid, 
+        PCT-Assay-Descr_name?, 
+        PCT-Assay-Descr_description?, 
+        PCT-Assay-Descr_protocol?, 
+        PCT-Assay-Descr_comment?, 
+        PCT-Assay-Descr_columns?, 
+        PCT-Assay-Descr_method?, 
+        PCT-Assay-Descr_target?, 
+        PCT-Assay-Descr_version?, 
+        PCT-Assay-Descr_sid-count-all?, 
+        PCT-Assay-Descr_sid-count-active?, 
+        PCT-Assay-Descr_sid-count-inactive?, 
+        PCT-Assay-Descr_sid-count-inconclusive?, 
+        PCT-Assay-Descr_sid-count-unspecified?, 
+        PCT-Assay-Descr_sid-count-probe?, 
+        PCT-Assay-Descr_cid-count-all?, 
+        PCT-Assay-Descr_cid-count-active?, 
+        PCT-Assay-Descr_cid-count-inactive?, 
+        PCT-Assay-Descr_cid-count-inconclusive?, 
+        PCT-Assay-Descr_cid-count-unspecified?, 
+        PCT-Assay-Descr_cid-count-probe?)>
+
+<!ELEMENT PCT-Assay-Descr_aid (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_name (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_description (PCT-Assay-Descr_description_E*)>
+
+
+<!ELEMENT PCT-Assay-Descr_description_E (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_protocol (PCT-Assay-Descr_protocol_E*)>
+
+
+<!ELEMENT PCT-Assay-Descr_protocol_E (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_comment (PCT-Assay-Descr_comment_E*)>
+
+
+<!ELEMENT PCT-Assay-Descr_comment_E (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_columns (PCT-Assay-Column-Descr*)>
+
+<!ELEMENT PCT-Assay-Descr_method (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_target (PCT-Assay-Target*)>
+
+<!ELEMENT PCT-Assay-Descr_version (
+        PCT-Assay-Descr_version_version, 
+        PCT-Assay-Descr_version_revision, 
+        PCT-Assay-Descr_version_last-data-change)>
+
+<!ELEMENT PCT-Assay-Descr_version_version (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_version_revision (#PCDATA)>
+
+<!-- date (yyyymmdd format) of last change to data for any tested SID -->
+<!ELEMENT PCT-Assay-Descr_version_last-data-change (#PCDATA)>
+
+<!-- counts for SID and CID (not from the description blob) -->
+<!ELEMENT PCT-Assay-Descr_sid-count-all (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_sid-count-active (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_sid-count-inactive (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_sid-count-inconclusive (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_sid-count-unspecified (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_sid-count-probe (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-all (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-active (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-inactive (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-inconclusive (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-unspecified (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Descr_cid-count-probe (#PCDATA)>
+
+
+<!ELEMENT PCT-Assay-Target (
+        PCT-Assay-Target_gi, 
+        PCT-Assay-Target_targetname?)>
+
+<!ELEMENT PCT-Assay-Target_gi (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Target_targetname (#PCDATA)>
+
+<!--
+ (Output) Assay Column Information
+ Note this is a subset/simplification of the full 
+ PC-ResultType in pcassay.asn
+-->
+<!ELEMENT PCT-Assay-Column-Descr (
+        PCT-Assay-Column-Descr_heading, 
+        PCT-Assay-Column-Descr_name, 
+        PCT-Assay-Column-Descr_description?, 
+        PCT-Assay-Column-Descr_type, 
+        PCT-Assay-Column-Descr_unit?, 
+        PCT-Assay-Column-Descr_tested-concentration?, 
+        PCT-Assay-Column-Descr_active-concentration?)>
+
+<!ELEMENT PCT-Assay-Column-Descr_heading (
+        PCT-Assay-Column-Descr_heading_tid | 
+        PCT-Assay-Column-Descr_heading_special)>
+
+<!ELEMENT PCT-Assay-Column-Descr_heading_tid (#PCDATA)>
+<!--
+ The following are special columns that do not have an associated TID;
+ they are always returned in downloaded tables.
+-->
+<!ELEMENT PCT-Assay-Column-Descr_heading_special EMPTY>
+
+<!--
+    outcome	-  PC-AssayResults.outcome in pcassay.asn
+    score	-  PC-AssayResults.rank in pcassay.asn
+-->
+<!ATTLIST PCT-Assay-Column-Descr_heading_special value (
+        outcome |
+        score
+        ) #REQUIRED >
+
+
+<!ELEMENT PCT-Assay-Column-Descr_name (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_description (PCT-Assay-Column-Descr_description_E*)>
+
+
+<!ELEMENT PCT-Assay-Column-Descr_description_E (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_type (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_unit (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_tested-concentration (
+        PCT-Assay-Column-Descr_tested-concentration_concentration, 
+        PCT-Assay-Column-Descr_tested-concentration_unit)>
+
+<!ELEMENT PCT-Assay-Column-Descr_tested-concentration_concentration (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_tested-concentration_unit (#PCDATA)>
+
+<!ELEMENT PCT-Assay-Column-Descr_active-concentration EMPTY>
+<!ATTLIST PCT-Assay-Column-Descr_active-concentration value ( true | false ) #REQUIRED >
+
+
+<!--
+ (Input) Get a score matrix for a set of IDs; the result is a URL
+ to a file containing uid-uid-score triplets.
+-->
+<!ELEMENT PCT-QueryScoreMatrix (
+        PCT-QueryScoreMatrix_ids, 
+        PCT-QueryScoreMatrix_ids-to?, 
+        PCT-QueryScoreMatrix_type, 
+        PCT-QueryScoreMatrix_format, 
+        PCT-QueryScoreMatrix_compression?, 
+        PCT-QueryScoreMatrix_n-3d-conformers?, 
+        PCT-QueryScoreMatrix_no-3d-parent?)>
+
+<!-- ID list; if ids-to not present, matrix will be ids X ids -->
+<!ELEMENT PCT-QueryScoreMatrix_ids (PCT-QueryUids)>
+
+<!-- If given, matrix will be ids X ids-to -->
+<!ELEMENT PCT-QueryScoreMatrix_ids-to (PCT-QueryUids)>
+<!-- Score type (more may be added in the future) -->
+<!ELEMENT PCT-QueryScoreMatrix_type EMPTY>
+
+<!--
+    similarity-2d-subs	-  2D Tanimoto similarity based on substructure key fingerprint
+    shape-optimized-3d	-  3D similarity optimized by shape
+    feature-optimized-3d	-  3D similarity optimized by feature
+-->
+<!ATTLIST PCT-QueryScoreMatrix_type value (
+        similarity-2d-subs |
+        shape-optimized-3d |
+        feature-optimized-3d
+        ) #REQUIRED >
+
+<!-- Format of the matrix output    -->
+<!ELEMENT PCT-QueryScoreMatrix_format EMPTY>
+
+<!--
+    csv	-  Comma-separated values   
+    id-id-score	-  Each line has id [tab] id [tab] score   
+-->
+<!ATTLIST PCT-QueryScoreMatrix_format value (
+        csv |
+        id-id-score
+        ) #REQUIRED >
+
+<!-- Compression of matrix output    -->
+<!-- Default is gzip        -->
+<!ELEMENT PCT-QueryScoreMatrix_compression EMPTY>
+
+<!--
+    none	-  no compression   
+    gzip	-  gzip (.gz)   
+    bzip2	-  bzip2 (.bz2)   
+-->
+<!ATTLIST PCT-QueryScoreMatrix_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!--
+ if 3D, use up to N conformers for each structure (if conformers are not being
+ specified directly); not all records may have this many conformers, and upper limit 
+ of N is set by the PubChem 3D system (currently 10)
+ default 1
+-->
+<!ELEMENT PCT-QueryScoreMatrix_n-3d-conformers (#PCDATA)>
+
+<!--
+ by default, the 3D structure of a parent is used for scoring if the requested record has no 3D;
+ set this to true to avoid this automatic substitution
+ default false
+-->
+<!ELEMENT PCT-QueryScoreMatrix_no-3d-parent EMPTY>
+<!ATTLIST PCT-QueryScoreMatrix_no-3d-parent value ( true | false ) #REQUIRED >
+
+
+<!--
+ (Input) Do a link expansion on the given list of IDs, returning either
+ an Entrez history item or list of ids, depending on query options.
+-->
+<!ELEMENT PCT-QueryELink (
+        PCT-QueryELink_ids-from, 
+        PCT-QueryELink_link-name, 
+        PCT-QueryELink_db-to)>
+
+<!-- starting ID list (and db) -->
+<!ELEMENT PCT-QueryELink_ids-from (PCT-QueryUids)>
+
+<!--
+ link name, same as used by Entrez/eUtils; link
+   type must match to/from database
+-->
+<!ELEMENT PCT-QueryELink_link-name (#PCDATA)>
+
+<!-- Entrez database of result IDs -->
+<!ELEMENT PCT-QueryELink_db-to (#PCDATA)>
+
+<!-- {Input} PubChem Compound/Substance Conformer Display -->
+<!ELEMENT PCT-ViewConformer (
+        PCT-ViewConformer_id, 
+        PCT-ViewConformer_conf-idx?, 
+        PCT-ViewConformer_img-style?)>
+
+<!-- PubChem Compound or Substance  -->
+<!ELEMENT PCT-ViewConformer_id (PCT-QueryUids)>
+
+<!-- Which conformer to display, default is 0 (1st conf) -->
+<!ELEMENT PCT-ViewConformer_conf-idx (#PCDATA)>
+
+<!--
+ Display style of images, default is rocking motion,
+   normal speed, no hydrogens, and 400x400 image
+-->
+<!ELEMENT PCT-ViewConformer_img-style (PCT-3DImgStyle)>
+
+<!-- {Input} Image Style for PubChem 3D View -->
+<!ELEMENT PCT-3DImgStyle (
+        PCT-3DImgStyle_rotation, 
+        PCT-3DImgStyle_speed, 
+        PCT-3DImgStyle_hydrogen, 
+        PCT-3DImgStyle_size)>
+<!-- Rotation type -->
+<!ELEMENT PCT-3DImgStyle_rotation (#PCDATA)>
+
+<!--
+    default	-  Rocking images
+    pos-axially	-  Counter-clockwise axially
+    neg-axially	-  Clockwise axially
+    pos-equatorially	-  Counter-clockwise equatorially
+    neg-equatorially	-  Clockwise equatorially
+    pos-azimuthally	-  Counter-clockwise azimuthally
+    neg-azimuthally	-  Clockwise azimuthally
+-->
+<!ATTLIST PCT-3DImgStyle_rotation value (
+        default |
+        pos-axially |
+        neg-axially |
+        pos-equatorially |
+        neg-equatorially |
+        pos-azimuthally |
+        neg-azimuthally
+        ) #IMPLIED >
+
+<!-- Image speed control -->
+<!ELEMENT PCT-3DImgStyle_speed (#PCDATA)>
+<!ATTLIST PCT-3DImgStyle_speed value (
+        stop |
+        slow |
+        normal |
+        fast
+        ) #IMPLIED >
+
+
+<!-- Display hydrogens -->
+<!ELEMENT PCT-3DImgStyle_hydrogen EMPTY>
+<!ATTLIST PCT-3DImgStyle_hydrogen value ( true | false ) #REQUIRED >
+
+
+<!-- Image size of X by X, 100 <= X <= 1000 -->
+<!ELEMENT PCT-3DImgStyle_size (#PCDATA)>
+
+<!-- {Input} PubChem Conformer Alignment View -->
+<!ELEMENT PCT-ViewConformerAlignment (
+        PCT-ViewConformerAlignment_matrix, 
+        PCT-ViewConformerAlignment_input-ref?, 
+        PCT-ViewConformerAlignment_input-query?, 
+        PCT-ViewConformerAlignment_filter?, 
+        PCT-ViewConformerAlignment_optimization, 
+        PCT-ViewConformerAlignment_sort?, 
+        PCT-ViewConformerAlignment_algn, 
+        PCT-ViewConformerAlignment_img-style?)>
+
+<!-- Conformer superposition matrix -->
+<!ELEMENT PCT-ViewConformerAlignment_matrix (#PCDATA)>
+
+<!--
+ User-defined referenece, conformer information is 
+ from 3D search.
+-->
+<!ELEMENT PCT-ViewConformerAlignment_input-ref (#PCDATA)>
+
+<!-- User-defined structure string, forwarded by 3D search. -->
+<!ELEMENT PCT-ViewConformerAlignment_input-query (#PCDATA)>
+<!-- Criteria for removing displayed superposition -->
+<!ELEMENT PCT-ViewConformerAlignment_filter (
+        PCT-ViewConformerAlignment_filter_shape-score, 
+        PCT-ViewConformerAlignment_filter_feature-score, 
+        PCT-ViewConformerAlignment_filter_rmself)>
+
+<!-- Maximum shape score for displayed superposition -->
+<!ELEMENT PCT-ViewConformerAlignment_filter_shape-score (#PCDATA)>
+
+<!-- Maximum feature score for displayed superposition -->
+<!ELEMENT PCT-ViewConformerAlignment_filter_feature-score (#PCDATA)>
+
+<!-- Remove self neighboring pair to be displayed  -->
+<!ELEMENT PCT-ViewConformerAlignment_filter_rmself EMPTY>
+<!ATTLIST PCT-ViewConformerAlignment_filter_rmself value ( true | false ) #REQUIRED >
+
+<!-- Conformer superposition type -->
+<!ELEMENT PCT-ViewConformerAlignment_optimization (#PCDATA)>
+
+<!--
+    shape-based	-  Maximize overlap of atoms
+    feature-based	-  Maximize overlap of features
+-->
+<!ATTLIST PCT-ViewConformerAlignment_optimization value (
+        shape-based |
+        feature-based
+        ) #IMPLIED >
+
+<!-- Conformer pair display order options -->
+<!ELEMENT PCT-ViewConformerAlignment_sort (#PCDATA)>
+
+<!--
+    shape-then-feature	-  descending order of shape similarity then feature similarity
+    feature-then-shape	-  descending order of feature similarity then shape similarity
+    shape-and-feature	-  descending order of combined shape and feature similarity
+    shape-only	-  descending order of shape similarity
+    feature-only	-  descending order of feature similarity
+    numerical-id-order	-  ascending numeric ordering of conformer IDs
+    input-order	-  no ordering of results (default)
+-->
+<!ATTLIST PCT-ViewConformerAlignment_sort value (
+        shape-then-feature |
+        feature-then-shape |
+        shape-and-feature |
+        shape-only |
+        feature-only |
+        numerical-id-order |
+        input-order
+        ) #IMPLIED >
+
+
+<!ELEMENT PCT-ViewConformerAlignment_algn (
+        PCT-ViewConformerAlignment_algn_pair | 
+        PCT-ViewConformerAlignment_algn_ref-fits)>
+
+<!-- indices of Displayed pair superposition -->
+<!ELEMENT PCT-ViewConformerAlignment_algn_pair (PCT-PairSuperposition)>
+
+<!-- indices of Displayed ref-fit superposition -->
+<!ELEMENT PCT-ViewConformerAlignment_algn_ref-fits (PCT-RefFitSuperposition)>
+
+<!--
+ Display style of images, default is rocking motion,
+ normal speed, no hydrogens, and 400x400 image
+-->
+<!ELEMENT PCT-ViewConformerAlignment_img-style (PCT-3DImgStyle)>
+
+<!-- {Input} Compound Pair and and Conformer Pairs for PubChem Conformer Alignment -->
+<!ELEMENT PCT-PairSuperposition (
+        PCT-PairSuperposition_cmpd-pair-idx, 
+        PCT-PairSuperposition_confpair-idx)>
+
+<!-- Displayed compound pair index -->
+<!ELEMENT PCT-PairSuperposition_cmpd-pair-idx (#PCDATA)>
+
+<!-- Displayed conformer superposution index -->
+<!ELEMENT PCT-PairSuperposition_confpair-idx (#PCDATA)>
+
+<!-- {Input} Reference and Fit Conformers for PubChem Conformer Alignment -->
+<!ELEMENT PCT-RefFitSuperposition (
+        PCT-RefFitSuperposition_ref-idx, 
+        PCT-RefFitSuperposition_fit-idx, 
+        PCT-RefFitSuperposition_confpair-idx, 
+        PCT-RefFitSuperposition_algn-idx)>
+
+<!-- Displayed ref index     -->
+<!ELEMENT PCT-RefFitSuperposition_ref-idx (#PCDATA)>
+
+<!-- Displayed fit index -->
+<!ELEMENT PCT-RefFitSuperposition_fit-idx (#PCDATA)>
+
+<!-- Displayed superposition index -->
+<!ELEMENT PCT-RefFitSuperposition_confpair-idx (#PCDATA)>
+
+<!-- Displayed superposition matrix index -->
+<!ELEMENT PCT-RefFitSuperposition_algn-idx (#PCDATA)>
+
+<!-- {Input/Ouput} General data blob container -->
+<!ELEMENT PCT-DataBlob (
+        PCT-DataBlob_data, 
+        PCT-DataBlob_format?, 
+        PCT-DataBlob_compression?)>
+
+<!-- Binary data -->
+<!ELEMENT PCT-DataBlob_data (#PCDATA)>
+<!-- The format of the uncompressed data -->
+<!ELEMENT PCT-DataBlob_format (#PCDATA)>
+
+<!--
+    asnb	-  binary ASN.1
+    asnt	-  NCBI text ASN.1
+-->
+<!ATTLIST PCT-DataBlob_format value (
+        unspecified |
+        asnb |
+        asnt |
+        xml |
+        sdf |
+        csv |
+        text |
+        html |
+        png |
+        other
+        ) #IMPLIED >
+
+<!-- The data may be compressed -->
+<!ELEMENT PCT-DataBlob_compression EMPTY>
+
+<!--
+    none	-  default, if unspecified
+-->
+<!ATTLIST PCT-DataBlob_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!-- {Input} ID exchange service options -->
+<!ELEMENT PCT-QueryIDExchange (
+        PCT-QueryIDExchange_input, 
+        PCT-QueryIDExchange_operation-type, 
+        PCT-QueryIDExchange_output-type, 
+        PCT-QueryIDExchange_output-dsn?, 
+        PCT-QueryIDExchange_output-method, 
+        PCT-QueryIDExchange_webenv?, 
+        PCT-QueryIDExchange_compression?)>
+
+<!-- Input IDs (exact match lookup performed) -->
+<!ELEMENT PCT-QueryIDExchange_input (PCT-QueryUids)>
+<!-- Operation to perform on resulting CID list -->
+<!ELEMENT PCT-QueryIDExchange_operation-type EMPTY>
+
+<!--
+    same	-  same chemical structure
+    sameste	-  same stereochemistry
+    sameiso	-  same isotopes
+    samecon	-  same connectivity
+    samepar	-  same parent
+    samepste	-  same parent stereochemistry
+    samepiso	-  same parent isotopes
+    samepcon	-  same parent connectivity
+    similar-compound	-  similar 2D structure
+    similar-conformer	-  similar 3D structure
+    parent	-  parent compound
+-->
+<!ATTLIST PCT-QueryIDExchange_operation-type value (
+        same |
+        sameste |
+        sameiso |
+        samecon |
+        samepar |
+        samepste |
+        samepiso |
+        samepcon |
+        similar-compound |
+        similar-conformer |
+        parent
+        ) #REQUIRED >
+
+<!-- Output IDs (unique IDs from CID operation) -->
+<!ELEMENT PCT-QueryIDExchange_output-type EMPTY>
+
+<!--
+    regid	-  Registry IDs
+    sid	-  SIDs
+    cid	-  CIDs
+    inchi	-  InChIs
+    inchikey	-  InChIKeys
+    synonyms	-  Synonyms (filtered)
+-->
+<!ATTLIST PCT-QueryIDExchange_output-type value (
+        regid |
+        sid |
+        cid |
+        inchi |
+        inchikey |
+        synonyms
+        ) #REQUIRED >
+
+
+<!--
+ Data source name to restrict output
+   Used only if output_type is (1)
+-->
+<!ELEMENT PCT-QueryIDExchange_output-dsn (#PCDATA)>
+
+<!ELEMENT PCT-QueryIDExchange_output-method EMPTY>
+
+<!--
+    entrez	-  Provide an Entrez History (Substance or Compound only)
+    file-list	-  Single column file showing unique results
+    file-pair	-  Two column file showing each input-output correspondence
+-->
+<!ATTLIST PCT-QueryIDExchange_output-method value (
+        entrez |
+        file-list |
+        file-pair
+        ) #REQUIRED >
+
+
+<!--
+ Destination WebEnvironment to put history
+   Used only if output_method is (1)
+-->
+<!ELEMENT PCT-QueryIDExchange_webenv (#PCDATA)>
+<!-- Compression of matrix output -->
+<!-- Default is gzip -->
+<!ELEMENT PCT-QueryIDExchange_compression EMPTY>
+
+<!--
+    none	-  no compression
+    gzip	-  gzip (.gz)
+    bzip2	-  bzip2 (.bz2)
+-->
+<!ATTLIST PCT-QueryIDExchange_compression value (
+        none |
+        gzip |
+        bzip2
+        ) #REQUIRED >
+
+
+<!-- {Input} 3D service options -->
+<!ELEMENT PCT-QueryPC3D (
+        PCT-QueryPC3D_ids)>
+
+<!-- ids to align - currently CIDs only -->
+<!ELEMENT PCT-QueryPC3D_ids (PCT-QueryUids)>
+
